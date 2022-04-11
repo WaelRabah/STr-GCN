@@ -7,21 +7,21 @@ import torch
 import numpy as np
 import torch.nn as nn
 import random
-
+from sklearn.model_selection import train_test_split
 def download_DHG_dataset():
-    if not os.path.exists("../DHG2016.zip") :
+    if not os.path.exists("DHG2016.zip") :
         url = 'http://www-rech.telecom-lille.fr/DHGdataset/DHG2016.zip'
         wget.download(url)
-    if not os.path.exists("../dataset") :
-        os.mkdir("../dataset")
-        with zipfile.ZipFile("../DHG2016.zip", 'r') as zip_ref:
-            zip_ref.extractall("../dataset")
+    if not os.path.exists("./dataset") :
+        os.mkdir("./dataset")
+        with zipfile.ZipFile("DHG2016.zip", 'r') as zip_ref:
+            zip_ref.extractall("./dataset")
 
 
 
 
 #Change the path to your downloaded dataset
-dataset_fold = "../dataset"
+dataset_fold = "./dataset"
 
 #change the path to your downloaded DHG dataset
 
@@ -97,8 +97,7 @@ def get_valid_frame(video_data):
 def split_train_test(test_subjects_ids, filtered_video_data, cfg):
   #split data into train and test
   #cfg = 0 >>>>>>> 14 categories      cfg = 1 >>>>>>>>>>>> 28 cate
-    train_data = []
-    test_data = []
+    dataset = []
     for g_id in range(1, 15):
         for f_id in range(1, 3):
             for sub_id in range(1, 21):
@@ -117,14 +116,11 @@ def split_train_test(test_subjects_ids, filtered_video_data, cfg):
                   #split to train and test list
                     data = filtered_video_data[key]
                     sample = {"skeleton":data, "label":label}
-                    if sub_id in test_subjects_ids:
-                        test_data.append(sample)
-                    else:
-                        train_data.append(sample)
-    if len(test_data) == 0:
-        raise "no such test subject"
+                    dataset.append(sample)
+    train_data,test_data=train_test_split(dataset,test_size=0.2)
+    train_data,val_data=train_test_split(dataset,test_size=0.1)
 
-    return train_data, test_data
+    return train_data, test_data, val_data
 
 def get_train_test_data(test_subjects_ids, cfg):
     print("Downloading DHG dataset.......")
@@ -133,8 +129,8 @@ def get_train_test_data(test_subjects_ids, cfg):
     video_data,edge_index = read_data_from_disk()
     print("Filtering frames .......")
     filtered_video_data = get_valid_frame(video_data)
-    train_data, test_data = split_train_test(test_subjects_ids, filtered_video_data, cfg)
-    return train_data,test_data,edge_index
+    train_data, test_data, val_data = split_train_test(test_subjects_ids, filtered_video_data, cfg)
+    return train_data, test_data, val_data,edge_index
 
 class Hand_Dataset(Dataset):
     """Face Landmarks dataset."""
@@ -311,12 +307,14 @@ class Hand_Dataset(Dataset):
 
 def init_data_loader(test_subjects_ids, data_cfg, sequence_len, batch_size, workers, device):
 
-    train_data, test_data, edge_index = get_train_test_data(test_subjects_ids, data_cfg)
+    train_data, test_data, val_data, edge_index = get_train_test_data(test_subjects_ids, data_cfg)
 
 
     train_dataset = Hand_Dataset(train_data, use_upsampling=True, use_data_aug = True, time_len = sequence_len)
 
     test_dataset = Hand_Dataset(test_data, use_upsampling=True, use_data_aug = False, time_len = sequence_len)
+
+    val_dataset = Hand_Dataset(val_data, use_upsampling=True, use_data_aug = False, time_len = sequence_len)
 
     print("train data num: ",len(train_dataset))
     print("test data num: ",len(test_dataset))
@@ -330,8 +328,13 @@ def init_data_loader(test_subjects_ids, data_cfg, sequence_len, batch_size, work
          pin_memory=True, num_workers=workers)
 
     val_loader = torch.utils.data.DataLoader(
+        val_dataset,
+        batch_size=batch_size, shuffle=False,
+         pin_memory=True, num_workers=workers)
+    
+    test_loader = torch.utils.data.DataLoader(
         test_dataset,
         batch_size=batch_size, shuffle=False,
          pin_memory=True, num_workers=workers)
 
-    return train_loader, val_loader, edge_index.to(device)
+    return train_loader, test_loader, val_loader, edge_index.to(device)

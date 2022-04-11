@@ -7,6 +7,7 @@ from torch import Tensor
 import torch
 from torch.nn import Parameter
 from torch_geometric.nn.inits import zeros
+from torch.autograd import Variable
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -32,20 +33,21 @@ class TemporalGraphAttention(nn.Module):
       attention_vectors=attention_weights @ V
       return attention_vectors
       
-
     def init_parameters(self):
       for p in self.parameters() :
           if p.dim() > 1:
               nn.init.xavier_uniform_(p)
-    def forward(self,x: Tensor) -> torch.Tensor:
+  
+    def forward(self,x: Tensor,adjacency_matrix : Tensor) -> torch.Tensor:
       batch_size = x.size(0)
       seq_length = x.size(1)
-      # x=adjacency_matrix @ x
-      K=self.key_map(x).view(batch_size, seq_length, self.head_num, self.head_dim).transpose(1, 2)
-      Q=self.query_map(x).view(batch_size, seq_length, self.head_num, self.head_dim).transpose(1, 2)
-      V=self.value_map(x).view(batch_size, seq_length, self.head_num, self.head_dim).transpose(1, 2)
+      graph_size=x.size(2)
+      x=adjacency_matrix @ x
+      K=self.key_map(x).view(batch_size, seq_length,graph_size, self.head_num, self.head_dim).transpose(1, 2)
+      Q=self.query_map(x).view(batch_size, seq_length,graph_size, self.head_num, self.head_dim).transpose(1, 2)
+      V=self.value_map(x).view(batch_size, seq_length,graph_size, self.head_num, self.head_dim).transpose(1, 2)
       x = self.attention(Q, K, V)
-      x = x.transpose(1,2).contiguous().view(batch_size, -1, self.d_model)
+      x = x.transpose(1,2).contiguous().view(batch_size,seq_length,graph_size, self.d_model)
       x=self.out(x)
       return x
 
@@ -63,22 +65,49 @@ class Norm(nn.Module):
         / (x.std(dim=-1, keepdim=True) + self.eps) + self.bias
         return norm
 
+# class EncoderLayer(nn.Module):
+#     def __init__(self,d_model, n_heads,head_dim, dropout = 0.1) -> None :
+#       super().__init__()
+#       self.att = nn.Sequential(
+#         TemporalGraphAttention(d_model, n_heads,head_dim),
+#         nn.Dropout(dropout)
+#       )
+#       self.fc = nn.Sequential(
+#         nn.Linear(d_model,d_model,dtype=torch.double),
+#         nn.ReLU(),
+#         nn.Dropout(dropout)
+#       )
+#       self.norm=Norm(d_model)
+
+#     def forward(self,x: Tensor) -> torch.Tensor:
+#       x_att=self.att(x)
+#       x=self.norm(x+x_att)
+#       x_fc=self.fc(x)
+#       x=self.norm(x+x_fc)
+#       return x
+
+# class Encoder(nn.Module):
+#     def __init__(self,n_encoders,d_model, n_heads,head_dim, dropout = 0.1) -> None :
+#       super().__init__()
+#       self.encoders=nn.ModuleList([EncoderLayer(d_model,n_heads,head_dim)  for _ in range(n_encoders)])
+
+#     def forward(self,x: Tensor) -> torch.Tensor:
+#       for encoder in self.encoders :
+#         x=encoder(x)
+#       return x
+
 class EncoderLayer(nn.Module):
     def __init__(self,d_model, n_heads,head_dim, dropout = 0.1) -> None :
       super().__init__()
-      self.att = nn.Sequential(
-        TemporalGraphAttention(d_model, n_heads,head_dim),
-        nn.Dropout(dropout)
-      )
+      self.att = TemporalGraphAttention(d_model, n_heads,head_dim)
       self.fc = nn.Sequential(
         nn.Linear(d_model,d_model,dtype=torch.double),
-        nn.ReLU(),
-        nn.Dropout(dropout)
+        nn.ReLU()
       )
       self.norm=Norm(d_model)
 
-    def forward(self,x: Tensor) -> torch.Tensor:
-      x_att=self.att(x)
+    def forward(self,x: Tensor,adjacency_matrix : Tensor) -> torch.Tensor:
+      x_att=self.att(x,adjacency_matrix)
       x=self.norm(x+x_att)
       x_fc=self.fc(x)
       x=self.norm(x+x_fc)
@@ -88,10 +117,23 @@ class Encoder(nn.Module):
     def __init__(self,n_encoders,d_model, n_heads,head_dim, dropout = 0.1) -> None :
       super().__init__()
       self.encoders=nn.ModuleList([EncoderLayer(d_model,n_heads,head_dim)  for _ in range(n_encoders)])
-
-    def forward(self,x: Tensor) -> torch.Tensor:
+      self.post_encoder = nn.Sequential(
+          nn.Linear(d_model, 16,dtype=torch.double),
+          nn.ReLU(),
+          nn.Dropout(dropout),
+        )
+      self.flatten_to_vec = nn.Sequential(
+          nn.Linear(16*22*8, d_model,dtype=torch.double),
+          nn.ReLU(),
+          nn.Dropout(dropout),
+        )
+    def forward(self,x: Tensor,adjacency_matrix : Tensor) -> torch.Tensor:
       for encoder in self.encoders :
-        x=encoder(x)
+        x=encoder(x, adjacency_matrix)
+      
+      x=F.relu(self.post_encoder(x))
+      x=torch.flatten(x,start_dim=1)
+      x=self.flatten_to_vec(x)
       return x
 
 
@@ -166,34 +208,50 @@ class DenseGCNConv(torch.nn.Module):
 
 class PositionalEncoding(nn.Module):
 
-    def __init__(self, dropout: float = 0.1, max_len: int = 5000):
+    def __init__(self, max_len: int = 5000):
         super().__init__()
-        self.dropout = nn.Dropout(p=dropout)
-    def distance_between_nodes(self,sequence) : 
+    def compute(self,sequence) : 
+      def angle_between_pair(x,x_next):
+        scalar_product=torch.einsum('jk,jk->j', x, x_next).unsqueeze(-1)
+        l2_x=torch.sqrt(torch.einsum('jk,jk->j', x, x).unsqueeze(-1))
+        l2_x_next=torch.sqrt(torch.einsum('jk,jk->j', x_next, x_next).unsqueeze(-1))
+        angles=torch.arccos(scalar_product/(l2_x*l2_x_next))
+        return torch.nan_to_num(angles) 
       distances=torch.tensor([],dtype=torch.float32,device=device)
+      angles=torch.tensor([],dtype=torch.float32,device=device)
       for i in range(len(sequence)): 
         if i==len(sequence)-1 :
           x=sequence[i]
           x_next=sequence[i]
           l2_norm=torch.sqrt(torch.sum((x_next-x) ** 2,dim=1))
           distances=torch.cat((distances,l2_norm.unsqueeze(0)))
+          angle_b_p=angle_between_pair(x,x_next)
+          angles=torch.cat((angles,angle_b_p.unsqueeze(0)))
           continue
         x=sequence[i]
         x_next=sequence[i+1]
         l2_norm=torch.sqrt(torch.sum((x_next-x) ** 2,dim=1))
         distances=torch.cat((distances,l2_norm.unsqueeze(0)))
-      return distances
+        angle_b_p=angle_between_pair(x,x_next)
+        angles=torch.cat((angles,angle_b_p.unsqueeze(0)))
+      return distances, angles
+
     def forward(self, x: Tensor) -> Tensor:
         """
         Args:
             x: Tensor, shape [ batch_size, seq_len, n_nodes, n_features]
         """
-        ones_vec=torch.tensor([1,1,1],device=device,requires_grad=True)
-        distances_per_sample=torch.tensor([],dtype=torch.float32,device=device,requires_grad=True)
+        ones_vec=torch.tensor([1]).cuda()
+        distances_per_sample=torch.tensor([],dtype=torch.float32).cuda()
+        angles_per_sample=torch.tensor([],dtype=torch.float32).cuda()
         for sample in x:
-          distances_per_sample=torch.cat((distances_per_sample,self.distance_between_nodes(sample).unsqueeze(0)))
-        x_pos=(distances_per_sample.unsqueeze(-1)*ones_vec).type(torch.double)
-        x=x+x_pos
+          distances,angles=self.compute(sample)
+          distances_per_sample=torch.cat((distances_per_sample,distances.unsqueeze(0)))
+          angles_per_sample=torch.cat((angles_per_sample,angles.unsqueeze(0)))
+        x_distance=(distances_per_sample.unsqueeze(-1)*ones_vec).type(torch.double)
+        x_angle=(angles_per_sample*ones_vec).type(torch.double)
+        x=torch.cat((x,Variable(x_distance, requires_grad=False).cuda()),dim=-1)
+        x=torch.cat((x,Variable(x_angle, requires_grad=False).cuda()),dim=-1)
         return x
 
 class GCN(nn.Module):
