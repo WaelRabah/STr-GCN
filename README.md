@@ -21,6 +21,14 @@ The Dynamic Hand gesture 14/28 dataset contains sequences of 14 hand gestures pe
 The dataset was collected using a mo-cap system that automatically infers the 3D location of each of the 21 joints of a hand model via 6 magnetic sensors and inverse kinematics, RGB-D video sequences comprised of more than 100K frames of 45 daily hand action categories, involving 26 different objects in several hand configurations, Additionally, 6D object poses were recorded and 3D object models for a subset of hand-object interaction sequences were provided. https://guiggh.github.io/publications/first-person-hands/
 </p>
 
+## Presentations slides :
+<ul>  
+<li> Presentation of meeting on 07/03 : https://docs.google.com/presentation/d/15yNmMs_09LldK1JBAy16deuIcKAqGVUHOafnQv9ihWI/edit?usp=sharing</li>
+<li> Presentation of meeting on 14/03 : https://docs.google.com/presentation/d/1LLv1dLM2l2pikQH3SHK9g1Nc07yEwwqgWf4xUFUYQsU/edit?usp=sharing</li>
+<li> Presentation of meeting on 21/03 : https://docs.google.com/presentation/d/1Prfb0hRRiyn070CUb1GccUywJe4p_RMEci7ONILvoNQ/edit?usp=sharing</li>
+<li> Presentation of meeting on 25/03 : https://docs.google.com/presentation/d/1PCxnYu9gO_dNBvS2cK08btXbrdcBFmSnqAYQ-QhOBYs/edit?usp=sharing</li>
+<li> Presentation of meeting on 04/04 + 19/04 : https://docs.google.com/presentation/d/1NDFdC4tPsoH9OjtlVaOl4ga03LCiKp9EAIXWaAo7RzE/edit?usp=sharing</li>
+</ul>
 
 ## Important papers :
 
