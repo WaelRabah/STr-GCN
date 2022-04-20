@@ -32,8 +32,8 @@ The dataset was collected using a mo-cap system that automatically infers the 3D
 
 ## Results :
 
- <div style="height:300px;width:100%"> Placeholder </div> 
- 
+ <div> Placeholder </div> 
+
 ## Important papers :
 
 > A Transformer-Based Network for Dynamic Hand Gesture Recognition ( https://iris.unimore.it/retrieve/handle/11380/1212263/282584/3DV_2020.pdf ) ( 2020 International Conference on 3D Vision (3DV) )
