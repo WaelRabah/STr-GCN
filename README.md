@@ -36,6 +36,8 @@ The dataset was collected using a mo-cap system that automatically infers the 3D
 
 ## Important papers :
 
+Consulted papers :https://docs.google.com/document/d/1KAJw1JTYK0k9C_YLx3FsxGrxViQxppKrRSePDeLr1Qw/edit?usp=sharing
+
 > A Transformer-Based Network for Dynamic Hand Gesture Recognition ( https://iris.unimore.it/retrieve/handle/11380/1212263/282584/3DV_2020.pdf ) ( 2020 International Conference on 3D Vision (3DV) )
 
 > Attention is all you need ( https://arxiv.org/abs/1706.0376 ) ( NIPS 2017  )
