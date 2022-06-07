@@ -1,5 +1,8 @@
 dataset
 *.zip
+*.rar
+sequences
+gestures
 lightning_logs
 __pycache__
 tb_logs
