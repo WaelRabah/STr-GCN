@@ -5,7 +5,7 @@
   <img src="./Model_architecture.png" alt="Model architecture"/>
 </p>
 <p align="center">
-  <img src="./GCN_architecture.png" alt="Model architecture"/>
+  <img src="./Graph_encoder.png" alt="Model architecture"/>
 </p>
 <!-- ![Model architecture](./Model_architecture.png) -->
 
