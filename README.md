@@ -33,7 +33,7 @@ The dataset was collected using a mo-cap system that automatically infers the 3D
 
 ## Results :
 
- <div> Placeholder </div> 
+ <div> Results file :  https://docs.google.com/document/d/1yGWuePKTz5JzXVRk9Y_UZe1aaNoPh7gIsfuPPYWFm-4/edit?usp=sharing </div> 
 
 ## Important papers :
 
