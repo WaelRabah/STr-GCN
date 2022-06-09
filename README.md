@@ -34,12 +34,7 @@ The dataset was collected using a mo-cap system that automatically infers the 3D
 ## Results :
 
  <div> Results files :  https://docs.google.com/document/d/1yGWuePKTz5JzXVRk9Y_UZe1aaNoPh7gIsfuPPYWFm-4/edit?usp=sharing </div> 
- <ul> 
- <li> Briareo : https://docs.google.com/document/d/1xU4tVw_wULEwki7pfwO0Mbqvz5IyaAIRLHH0mOyhnm4/edit?usp=sharing </li>
- <li> Shrec17 : https://docs.google.com/document/d/1_cjm7BqlzddtOOi8vAxiZsv-q0-A_t6JrEvYDyzkLzo/edit?usp=sharing </li>
- <li> FPHA : https://docs.google.com/document/d/1-B-QfmA4otrcyzjFzEnjTd5iFDawQi6NIDb7kxSZBzQ/edit?usp=sharing </li>
- 
- </ul>  
+ <div> Results sheet : https://docs.google.com/spreadsheets/d/1biXAyx_3Ry1459x5qWA1oYE89o41GDI93srR4uoWzlo/edit?usp=sharing </div>  
 
 ## Important papers :
 
