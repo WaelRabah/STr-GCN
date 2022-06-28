@@ -4,37 +4,46 @@
 <p align="center">
   <img src="./Model_architecture.png" alt="Model architecture"/>
 </p>
-<p align="center">
+<!-- <p align="center">
   <img src="./Graph_encoder.png" alt="Model architecture"/>
-</p>
+</p> -->
 <!-- ![Model architecture](./Model_architecture.png) -->
 
 ## Datasets 
-### 1. Offline datasets :
-#### 1. DHG-14/28 : 
+#### 1. SHREC'17 : 
 <p>
-The Dynamic Hand gesture 14/28 dataset contains sequences of 14 hand gestures performed in two ways: using one finger and the whole hand. Each gesture is performed 5 times by 20 participants in 2 ways - described above - , resulting in 2800 sequences. All participants are right handed. Sequences are labelled following their gesture, the number of fingers used, the performer and the trial. Each frame of sequences contains a depth image, the coordinates of 22 joints both in the 2D depth image space and in the 3D world space forming a full hand skeleton. The Intel RealSense short range depth camera is used to collect our dataset. The depth images and hand skeletons were captured at 30 frames per second, with a resolution of the depth image of 640x480. The length of sample gestures ranges from 20 to 50 frames. http://www-rech.telecom-lille.fr/DHGdataset/ 
-Link to 70/30 split : https://drive.google.com/file/d/19Dmn8KnRwkiIt47fqZ10D2JtabjbLTQ4/view
+SHREC'17 is a challenging hand gesture dataset. It contains 2 configurations:  14 gestures performed using one finger and 28 gestures performed with the full hand. Each gesture is performed between 1 and 10 times by 28 participants, which gives us, 2800 sequences in total. In the experiments, this data is divided into a 70/30 split, 1960 sequences for training and 840 sequences for testing.
+Link : http://www-rech.telecom-lille.fr/shrec2017-hand/
 </p>
 
 #### 2. First-Person Hand Action Benchmark with RGB-D Videos and 3D Hand Pose Annotation : 
 <p>
-The dataset was collected using a mo-cap system that automatically infers the 3D location of each of the 21 joints of a hand model via 6 magnetic sensors and inverse kinematics, RGB-D video sequences comprised of more than 100K frames of 45 daily hand action categories, involving 26 different objects in several hand configurations, Additionally, 6D object poses were recorded and 3D object models for a subset of hand-object interaction sequences were provided. https://guiggh.github.io/publications/first-person-hands/
+The First Person Hand Action dataset provides dynamic hand action sequences of subjects performing daily life tasks. It contains, 45 different actions performed by 6 actors manipulating 26 objects in 3 scenarios. In total 1175 action samples. We use the 1:1 data split ratio proposed in the original paper, with 600 action sequences used for training and 575 for testing.
+Link: https://guiggh.github.io/publications/first-person-hands/
 </p>
 
-## Presentations slides :
+#### 3. Briareo : 
+<p>
+was released in 2019 for the task of dynamic hand gesture recognition in an automotive context. This dataset was mainly collected for applications that aim to reduce driver inattention.
+The dataset contains 12 gestures performed by 40 different subjects (33 males and 7
+females) with the right hand, with each gesture is repeated three times. The entire dataset contains 1440 sequences with subjects from 1 to 26 used for training, 27 to 32 used for validation and 33 to 40 used for testing.
+Link: https://aimagelab.ing.unimore.it/imagelab/page.asp?IdPage=31
+</p>
+
+
+<!-- ## Presentations slides :
 <ul>  
 <li> Presentation of meeting on 07/03 : https://docs.google.com/presentation/d/15yNmMs_09LldK1JBAy16deuIcKAqGVUHOafnQv9ihWI/edit?usp=sharing</li>
 <li> Presentation of meeting on 14/03 : https://docs.google.com/presentation/d/1LLv1dLM2l2pikQH3SHK9g1Nc07yEwwqgWf4xUFUYQsU/edit?usp=sharing</li>
 <li> Presentation of meeting on 21/03 : https://docs.google.com/presentation/d/1Prfb0hRRiyn070CUb1GccUywJe4p_RMEci7ONILvoNQ/edit?usp=sharing</li>
 <li> Presentation of meeting on 25/03 : https://docs.google.com/presentation/d/1PCxnYu9gO_dNBvS2cK08btXbrdcBFmSnqAYQ-QhOBYs/edit?usp=sharing</li>
 <li> Presentation of meeting on 04/04 + 19/04 : https://docs.google.com/presentation/d/1NDFdC4tPsoH9OjtlVaOl4ga03LCiKp9EAIXWaAo7RzE/edit?usp=sharing</li>
-</ul>
+</ul> -->
 
-## Results :
+<!-- ## Results :
 
  <div> Results files :  https://docs.google.com/document/d/1yGWuePKTz5JzXVRk9Y_UZe1aaNoPh7gIsfuPPYWFm-4/edit?usp=sharing </div> 
- <div> Results sheet : https://docs.google.com/spreadsheets/d/1biXAyx_3Ry1459x5qWA1oYE89o41GDI93srR4uoWzlo/edit?usp=sharing </div>  
+ <div> Results sheet : https://docs.google.com/spreadsheets/d/1biXAyx_3Ry1459x5qWA1oYE89o41GDI93srR4uoWzlo/edit?usp=sharing </div>   -->
 
 ## Important papers :
 
