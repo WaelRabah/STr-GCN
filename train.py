@@ -99,7 +99,7 @@ def train_model(dataset_name="SHREC17"):
     torch.cuda.manual_seed(42)
 
     print("Data Config=",data_cfg)
-    train_loader, test_loader, val_loader, adjacency_matrix = init_data_loader(
+    train_loader, test_loader, val_loader, adjacency_matrix, labels = init_data_loader(
         dataset_name,data_cfg, sequence_len, batch_size, workers, device)
 
 
@@ -158,7 +158,7 @@ def train_model(dataset_name="SHREC17"):
     torch.cuda.empty_cache()
     plt.figure(figsize=(15,8))
     plot_history(history.history,"STrGCN")
-    plot_confusion_matrix(confusion_matrix,'Confusion_matrices/confusion_matrix_{}.eps'.format(dataset_name))
+    plot_confusion_matrix(confusion_matrix,labels,'Confusion_matrices/confusion_matrix_{}.eps'.format(dataset_name))
     model = STrGCN.load_from_checkpoint(checkpoint_path=checkpoint_callback.best_model_path,adjacency_matrix=adjacency_matrix,optimizer_params=optimizer_params,d_model=d_model,n_heads=n_heads,num_classes=num_classes, dropout=dropout_rate,seq_len=seq_len)
     test_metrics=trainer.test(dataloaders=test_loader)
 

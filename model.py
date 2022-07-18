@@ -1,5 +1,6 @@
 import torch
-from layers import  TransformerGraphEncoder, SGCN
+from layers.TransformerGraphEncoder import  TransformerGraphEncoder
+from layers.SGCN import  SGCN
 import torch.nn as nn
 import pytorch_lightning as pl
 from torch.autograd import Variable

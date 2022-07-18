@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch import Tensor
 import math
+import torch.nn.functional as F
 
 def feed_forward(dim_input: int = 128, dim_feedforward: int = 512) -> nn.Module:
     return nn.Sequential(

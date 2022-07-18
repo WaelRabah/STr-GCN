@@ -1,7 +1,7 @@
-from briareo_loader import load_Briareo_data
-from shrec_loader import load_shrec_data
-from fpha_loader import load_FPHA_data
-from data_preprocessing_tools import Graph, Hand_Dataset
+from .briareo_loader import load_Briareo_data
+from .shrec_loader import load_shrec_data
+from .fpha_loader import load_FPHA_data
+from .data_preprocessing_tools import Graph, Hand_Dataset
 import torch
 
 

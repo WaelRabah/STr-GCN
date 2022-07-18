@@ -5,7 +5,7 @@ import numpy as np
 from torch import Tensor
 from random import shuffle
 import random
-
+import torch.nn.functional as F
 
 class Hand_Dataset(Dataset):
     """Face Landmarks dataset."""
