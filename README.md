@@ -16,7 +16,7 @@ This package has the following requirements:
 
 ### Training
 1. Download the [SHREC’17 Track Dataset](http://www-rech.telecom-lille.fr/shrec2017-hand/), the extracted 3D skeleton data of [Briareo dataset](https://drive.google.com/drive/folders/17CGLnI5emX1y6iOdqHygblujz0FFlrc8?usp=sharing) and the extracted 3D skeleton data of [FPHA dataset](https://drive.google.com/file/d/1PdrGPGVlG_R7TP3IO8rNeY4pSRCNcQXu/view?usp=sharing). <br/>
-- The download of SHREC'17 is handled by our script.
+- You don't need to download and extract SHREC'17 is handled by our script.
 - Download the Briareo extracted data from this [link](https://drive.google.com/drive/folders/17CGLnI5emX1y6iOdqHygblujz0FFlrc8?usp=sharing) and place it a folder named 'Briareo_data'.
 - Download the FPHA extracted data from this [link](https://drive.google.com/file/d/1PdrGPGVlG_R7TP3IO8rNeY4pSRCNcQXu/view?usp=sharing) and extract the content of the zip into a folder named 'FPHA_data'.
 
