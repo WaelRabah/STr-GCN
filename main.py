@@ -3,4 +3,6 @@ from train import train_model
 
 
 if __name__ == '__main__':
-    train_model()
+    # The dataset can be changed into either 'BRIAREO' or 'FPHA'
+    dataset_name="SHREC"
+    train_model(dataset_name)

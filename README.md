@@ -15,11 +15,14 @@ This package has the following requirements:
 * `Pytorch v1.11.0`
 
 ### Training
-1. Download the [SHREC’17 Track Dataset](http://www-rech.telecom-lille.fr/shrec2017-hand/), the extracted 3D skeleton data of [Briareo dataset](https://guiggh.github.io/publications/first-person-hands/) and the extracted 3D skeleton data of [FPHA dataset](https://aimagelab.ing.unimore.it/imagelab/page.asp?IdPage=31).
+1. Download the [SHREC’17 Track Dataset](http://www-rech.telecom-lille.fr/shrec2017-hand/), the extracted 3D skeleton data of [Briareo dataset](https://drive.google.com/drive/folders/17CGLnI5emX1y6iOdqHygblujz0FFlrc8?usp=sharing) and the extracted 3D skeleton data of [FPHA dataset](https://drive.google.com/file/d/1PdrGPGVlG_R7TP3IO8rNeY4pSRCNcQXu/view?usp=sharing). <br/>
+- The download of SHREC'17 is handled by our script.
+- Download the Briareo extracted data from this [link](https://drive.google.com/drive/folders/17CGLnI5emX1y6iOdqHygblujz0FFlrc8?usp=sharing) and place it a folder named 'Briareo_data'.
+- Download the FPHA extracted data from this [link](https://drive.google.com/file/d/1PdrGPGVlG_R7TP3IO8rNeY4pSRCNcQXu/view?usp=sharing) and extract the content of the zip into a folder named 'FPHA_data'.
 
-2. Set the path to your downloaded dataset folder in the ```/util/BRIAREO_parse_data.py (line 2)```, ```/util/FPHA_parse_data.py (line 2)``` or ```the /util/SHREC_parse_data.py (line 5)```.
+2. Set the path for saving your trained models in the  ```train.py (line 126) ```.
 
-3. Set the path for saving your trained models in the  ```train.py (line 109) ```.
+3. The dataset used for training is set by default to ```SHREC```, you can change that in main.py into ```BRIAREO``` or ```FPHA```.
 
 4. Run the following command.
 ```
