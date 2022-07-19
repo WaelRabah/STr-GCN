@@ -24,7 +24,7 @@ This package has the following requirements:
 
 2. Set the path for saving your trained models in the  ```train.py (line 126) ```.
 
-3. The dataset used for training is set by default to ```SHREC```, you can change that in main.py into ```BRIAREO``` or ```FPHA```.
+3. The dataset used for training is set by default to ```SHREC17```, you can change that in main.py into ```BRIAREO``` or ```FPHA```.
 
 4. Run the following command.
 ```
