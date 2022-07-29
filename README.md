@@ -26,10 +26,12 @@ This package has the following requirements:
 
 3. The dataset used for training is set by default to ```SHREC17```, you can change that in main.py into ```BRIAREO``` or ```FPHA```.
 
-4. Run the following command.
+4. Run the following command to train the model.
 ```
 python train.py     
 ```
+### Evaluation
+-Download the weights of our [best pre-trained models](https://drive.google.com/drive/folders/11XKDu0uColyt6gnLFvpjQaZFxZzgGyD_?usp=sharing)
 <!-- ### Citation
 If you find this code useful in your research, please consider citing:
 ```
