@@ -31,7 +31,7 @@ This package has the following requirements:
 python train.py     
 ```
 ### Evaluation
--Download the weights of our [best pre-trained models](https://drive.google.com/drive/folders/11XKDu0uColyt6gnLFvpjQaZFxZzgGyD_?usp=sharing)
+- Download the weights of our [best pre-trained models](https://drive.google.com/drive/folders/11XKDu0uColyt6gnLFvpjQaZFxZzgGyD_?usp=sharing)
 <!-- ### Citation
 If you find this code useful in your research, please consider citing:
 ```
