@@ -59,7 +59,7 @@ def init_data_loader(dataset_name, data_cfg, sequence_len, batch_size, workers, 
     train_dataset = Hand_Dataset(train_data, use_data_aug=True, 
                                 use_aug_features=False, 
                                 time_len=sequence_len, 
-                                normalize=False, 
+                                normalize=True, 
                                 scaleInvariance=False,
                                 translationInvariance=False, 
                                 useRandomMoving=True, 
@@ -73,10 +73,10 @@ def init_data_loader(dataset_name, data_cfg, sequence_len, batch_size, workers, 
                                 )
 
     test_dataset = Hand_Dataset(test_data, use_data_aug=False, use_aug_features=False, time_len=sequence_len,
-                                normalize=False, scaleInvariance=False, translationInvariance=False, isPadding=False)
+                                normalize=True, scaleInvariance=False, translationInvariance=False, isPadding=False)
 
     val_dataset = Hand_Dataset(val_data, use_data_aug=False, use_aug_features=False, time_len=sequence_len,
-                               normalize=False, scaleInvariance=False, translationInvariance=False, isPadding=False)
+                               normalize=True, scaleInvariance=False, translationInvariance=False, isPadding=False)
 
     print("train data num: ", len(train_dataset))
     print("test data num: ", len(test_dataset))

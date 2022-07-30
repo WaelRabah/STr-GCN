@@ -86,9 +86,9 @@ class Hand_Dataset(Dataset):
             theta = torch.arccos(z/r)*180 / torch.pi  # to degrees
             phi = torch.atan2(torch.tensor(y), torch.tensor(x))*180 / torch.pi
             return torch.cat([r, theta, phi], dim=-1)
-        movement_vectors = torch.tensor([], dtype=torch.float32)
-        distances = torch.tensor([], dtype=torch.float32)
-        angles = torch.tensor([], dtype=torch.float32)
+        movement_vectors = torch.tensor([], dtype=torch.float)
+        distances = torch.tensor([], dtype=torch.float)
+        angles = torch.tensor([], dtype=torch.float)
         for i in range(0, len(sequence)):
             if i == 0:
                 x = sequence[i]

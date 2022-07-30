@@ -101,7 +101,7 @@ def train_model(dataset_name="SHREC17"):
     print("Data Config=",data_cfg)
     train_loader, test_loader, val_loader, adjacency_matrix, labels = init_data_loader(
         dataset_name,data_cfg, sequence_len, batch_size, workers, device)
-
+    
 
     d_model=128
     n_heads=8

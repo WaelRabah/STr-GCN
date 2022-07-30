@@ -60,7 +60,7 @@ class unit_gcn(nn.Module):
         else:
             self.bn = nn.BatchNorm2d(self.out_channels, dtype=torch.float)
 
-        self.act = nn.Mish()
+        self.act = nn.Mish(inplace=False)
 
         # initialize
         for conv in self.conv_list:
@@ -105,7 +105,7 @@ class unit_gcn(nn.Module):
 class SGCN(nn.Module):
     def __init__(self, features_in, features_out, A) -> None:
         super().__init__()
-        default_backbone = [(features_in, 64, 1), (64, 64, 1), (64, 64, 1), (64, 64, 1), (64, features_out, 2), (features_out, features_out, 1),(features_out, features_out, 1)]
+        default_backbone = [(features_in, 64, 2), (64, 64, 1), (64, 64, 1), (64, 64, 1), (64, features_out, 2), (features_out, features_out, 1),(features_out, features_out, 1)]
         # , (128, 256, 2), (256, 256, 1), (256, 256, 1) , (256, 512, 2), (512, 512, 1), (512, 512, 1)
         # default_backbone = [(3,128,1)]
         self.conv_layers = nn.ModuleList([
@@ -116,6 +116,8 @@ class SGCN(nn.Module):
 
     def forward(self, x: Tensor, adjacency_matrix: Tensor) -> torch.Tensor:
         for l in self.conv_layers:
+            
             x = l(x, adjacency_matrix)
+
 
         return x

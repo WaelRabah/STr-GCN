@@ -14,7 +14,7 @@ def download_SHREC_2017_DHG_dataset():
         import time
         start_time = time.time()
         patoolib.extract_archive(
-            "HandGestureDataset_SHREC2017.rar", outdir="shrec_dataset")
+            "./HandGestureDataset_SHREC2017.rar", outdir="./data/shrec_dataset")
         print("--- %s seconds ---" % (time.time() - start_time))
 
 

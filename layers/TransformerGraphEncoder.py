@@ -52,27 +52,28 @@ class AttentionHead(nn.Module):
                 stride=(stride, 1),dtype=torch.float)
 
     def attention(self,Q,K,V):
-      sqrt_dk=torch.sqrt(torch.tensor(self.d_k))
-      attention_weights=F.softmax((Q @ K.transpose(-2,-1))/sqrt_dk)
-      attention_vectors=attention_weights @ V
-      return attention_vectors
+        sqrt_dk=torch.sqrt(torch.tensor(self.d_k))
+        attention_weights=F.softmax((Q @ K.transpose(-2,-1))/sqrt_dk)
+        attention_vectors=attention_weights @ V
+
+        return attention_vectors            
     def forward(self, x: Tensor) -> Tensor:
-      batch_size = x.size(0)
-      seq_length = x.size(1)
-      graph_size=x.size(2)
-      x=x.permute(0,3,2,1)
-      # x=x.transpose(1,2)
-      #Q, K, V=torch.split(self.qkv_conv(x), [self.d_k , self.d_k, self.d_v],
-      #                            dim=1)
-      Q=self.q_conv(x).permute(0,3,2,1)
-      K=self.k_conv(x).permute(0,3,2,1)
-      V=self.v_conv(x).permute(0,3,2,1)
+        batch_size = x.size(0)
+        seq_length = x.size(1)
+        graph_size=x.size(2)
+        x=x.permute(0,3,2,1)
+        # x=x.transpose(1,2)
+        #Q, K, V=torch.split(self.qkv_conv(x), [self.d_k , self.d_k, self.d_v],
+        #                            dim=1)
+        Q=self.q_conv(x).permute(0,3,2,1)
+        K=self.k_conv(x).permute(0,3,2,1)
+        V=self.v_conv(x).permute(0,3,2,1)
 
 
 
-
-      x=self.attention(Q,K,V).transpose(1,2).contiguous().view(batch_size,seq_length,graph_size, self.d_k)
-      return x
+        x=self.attention(Q,K,V).transpose(1,2).contiguous().view(batch_size,seq_length,graph_size, self.d_k)
+        
+        return x
 
 class MultiHeadAttention(nn.Module):
     def __init__(self, num_heads: int, dim_in: int,dim_k,dim_q,dim_v):
@@ -83,9 +84,15 @@ class MultiHeadAttention(nn.Module):
         self.linear = nn.Linear(num_heads * dim_k, dim_in,dtype=torch.float)
 
     def forward(self, x) -> Tensor:
-        return self.linear(
-            torch.cat([h(x) for h in self.heads], dim=-1)
+        outs=[]
+        for h in self.heads:
+            outs.append(h(x))
+        outs=torch.cat(outs, dim=-1)
+        outs=self.linear(
+            outs
         )
+
+        return outs
 
 class TransformerGraphEncoderLayer(nn.Module):
     def __init__(
@@ -109,7 +116,9 @@ class TransformerGraphEncoderLayer(nn.Module):
         )
         self.norm = nn.LayerNorm(dim_model,dtype=torch.float)
     def forward(self, src: Tensor) -> Tensor:
+
         src = self.attention(self.norm(src))
+
         return self.feed_forward(src)
 
 class PositionalEncoder(nn.Module):
